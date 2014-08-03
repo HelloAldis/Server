@@ -17,28 +17,39 @@ ticketController.create = function() {
   var userRequest = UserRequest.onCreate(this);
 
   console.log(userRequest);
-  UserRequestDao.add(userRequest);
-
-  var resData = {
-    status: 'Success'
-  };
-
-  this.res.json(resData);
+  var response = this.res;
+  UserRequestDao.add(userRequest, function (err, result) {
+    if (err) {
+      var resData = {
+        status: 'Failure',
+        message: err
+      };
+      response.json(resData);
+    } else {
+      var resData = {
+        status: 'Success',
+        message: '创建成功'
+      };
+      response.json(resData);
+    }
+  });
 }
 
 ticketController.near = function() {
   var location = {};
   location.longitude = parseFloat(this.param('long'));
   location.latitude = parseFloat(this.param('lat'));
-  var distance = 5;
+  var distance = 6371;
 
-  UserRequestDao.near(location, distance);
-
-  var resData = {
-    status: 'Success'
-  };
-
-  this.res.json(resData);
+  var response = this.res;
+  UserRequestDao.near(location, distance, function (err, doc) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(doc);
+      response.json(doc.results);
+    }
+  });
 }
 
 ticketController.update = function () {

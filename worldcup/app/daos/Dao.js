@@ -13,15 +13,16 @@ var UserRequestCollection = {
 }
 
 var UserRequestDao = {
-  add: function (userRequest) {
+  add: function (userRequest, callback) {
     var collection = UserRequestCollection.collection();
-    collection.insert(userRequest, {w:1}, function (err, result) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(result);
-      }
-    });
+    collection.insert(userRequest, {w:1}, callback);
+    //   function (err, result) {
+    //   if (err) {
+    //     console.log(err);
+    //   } else {
+    //     console.log(result);
+    //   }
+    // });
   },
 
   findOne: function (id) {
@@ -36,16 +37,17 @@ var UserRequestDao = {
     });
   },
 
-  near: function (location, distance) {
+  near: function (location, distance, callback) {
     var collection = UserRequestCollection.collection();
-    collection.geoNear(location.longitude, location.latitude, {maxDistance:distance/6371, distanceMultiplier:6371, spherical:true},
-      function (err, docs) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(docs);
-        }
-      })
+    collection.geoNear(location.longitude, location.latitude, {maxDistance:distance/6371, distanceMultiplier:6371,
+      spherical:true}, callback);
+      // function (err, docs) {
+      //   if (err) {
+      //     console.log(err);
+      //   } else {
+      //     console.log(docs);
+      //   }
+      // })
   },
 
   update: function (id, newValue) {
